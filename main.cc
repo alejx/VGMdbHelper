@@ -6,8 +6,11 @@
 #define MAX_LENGTH 10000
 #define MAX_COUNT 100
 
-static char composers[MAX_COUNT][STANDARD_LENGTH], arrangers[MAX_COUNT][STANDARD_LENGTH], lyricists[MAX_COUNT][STANDARD_LENGTH];
-static int composers_count, arrangers_count, lyricists_count;
+char composers[MAX_COUNT][STANDARD_LENGTH], arrangers[MAX_COUNT][STANDARD_LENGTH], lyricists[MAX_COUNT][STANDARD_LENGTH];
+int composers_count, arrangers_count, lyricists_count;
+
+char ties[MAX_COUNT][STANDARD_LENGTH];
+int ties_count;
 
 class Entry {
 private:
@@ -57,10 +60,20 @@ private:
                     break;
                 }
             }
-            if (!included) {
+            if (!included)
                 strcpy(dest[(*dest_count)++], source[i]);
-            }
         }
+    }
+
+    static void AddTie(char *source, char dest[][STANDARD_LENGTH], int *dest_count) {
+        bool included = false;
+        for (int i = 0; i < *dest_count; ++i)
+            if (!strcmp(source, dest[i])) {
+                included = true;
+                break;
+            }
+        if (!included)
+            strcpy(dest[(*dest_count)++], source);
     }
 
 public:
@@ -132,15 +145,20 @@ public:
                        arrangers, &arrangers_count);
             AddCredits(entries[i].lyricist, entries[i].lyricist_count,
                        lyricists, &lyricists_count);
+
+            AddTie(entries[i].tie, ties, &ties_count);
         }
         printf("%d\n", composers_count);
 
-        strcat(ret, "\nComposers: ");
+        strcat(ret, "\nComposers:\n");
         strcat(ret, Combine(composers, composers_count));
-        strcat(ret, "\nArrangers: ");
+        strcat(ret, "\nArrangers:\n");
         strcat(ret, Combine(arrangers, arrangers_count));
-        strcat(ret, "\nLyricists: ");
+        strcat(ret, "\nLyricists:\n");
         strcat(ret, Combine(lyricists, lyricists_count));
+
+        strcat(ret, "\n\nTie ups:\n");
+        strcat(ret, Combine(ties, ties_count));
 
         return ret;
     }
