@@ -128,10 +128,11 @@ public:
             sprintf(temp, "\n");
         strcat(ret, temp);
 
-        sprintf(temp, "Composer: %s\nArranger: %s\nLyricist: %s\n",
-                Combine(composer, composer_count),
-                Combine(arranger, arranger_count),
-                Combine(lyricist, lyricist_count));
+        sprintf(temp, "Composer: %s\n", Combine(composer, composer_count));
+        strcat(ret, temp);
+        sprintf(temp, "Arranger: %s\n", Combine(arranger, arranger_count));
+        strcat(ret, temp);
+        sprintf(temp, "Lyricist: %s\n", Combine(lyricist, lyricist_count));
         strcat(ret, temp);
 
         return ret;
