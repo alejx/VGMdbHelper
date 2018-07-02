@@ -112,20 +112,27 @@ public:
 
     char *Output(bool display_disc = true) {
         static char ret[MAX_LENGTH];
+        static char temp[MAX_LENGTH];
         memset(ret, '\0', MAX_LENGTH);
+        memset(temp, '\0', MAX_LENGTH);
 
+        strcat(ret, "M-");
         if (display_disc)
-            sprintf(ret, "M-%d.%02d - %s \"%s\" %s\nComposer: %s\nArranger: %s\nLyricist: %s\n",
-                    disc, track, prefix, tie, suffix,
-                    Combine(composer, composer_count),
-                    Combine(arranger, arranger_count),
-                    Combine(lyricist, lyricist_count));
+            sprintf(temp, "%d.%02d", disc, track);
         else
-            sprintf(ret, "M-%02d - %s \"%s\" %s\nComposer: %s\nArranger: %s\nLyricist: %s\n",
-                    track, prefix, tie, suffix,
-                    Combine(composer, composer_count),
-                    Combine(arranger, arranger_count),
-                    Combine(lyricist, lyricist_count));
+            sprintf(temp, "%02d", track);
+        strcat(ret, temp);
+        if (strlen(prefix) + strlen(suffix) + strlen(tie))
+            sprintf(temp, " - %s \"%s\" %s\n", prefix, tie, suffix);
+        else
+            sprintf(temp, "\n");
+        strcat(ret, temp);
+
+        sprintf(temp, "Composer: %s\nArranger: %s\nLyricist: %s\n",
+                Combine(composer, composer_count),
+                Combine(arranger, arranger_count),
+                Combine(lyricist, lyricist_count));
+        strcat(ret, temp);
 
         return ret;
     }
